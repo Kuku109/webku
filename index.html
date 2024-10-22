@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow TikTok to Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-section img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .slash {
+            margin: 0 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #25f4ee;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #25f4ee;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            background: linear-gradient(45deg, #00f, #0ff, #00f, #0ff);
+            background-size: 200% 200%;
+            z-index: -1;
+            filter: blur(8px);
+            transition: all 0.3s ease;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .btn:hover::before {
+            filter: blur(12px);
+        }
+
+        @keyframes glow {
+            from {
+                background-position: 0% 50%;
+            }
+            to {
+                background-position: 100% 50%;
+            }
+        }
+
+        .btn:hover {
+            background-color: #21bdbb;
+            color: #fff;
+        }
+
+        .follower-container {
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: scroll;
+            border: 2px solid #25f4ee;
+            border-radius: 5px;
+            padding: 10px;
+            width: 300px;
+            background-color: #f9f9f9;
+        }
+
+        .follower-list {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .follower-list li {
+            background-color: #e0f7fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .follow-btn {
+            background-color: #25f4ee;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .follow-btn:hover {
+            background-color: #21bdbb;
+        }
+
+        /* Gaya untuk profil bulat yang menyala */
+        .glowing-profile {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .glowing-profile img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid #25f4ee;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glowing-profile img:hover {
+            box-shadow: 0 0 20px #25f4ee, 0 0 40px #25f4ee, 0 0 60px #25f4ee;
+        }
+
+        /* Penataan untuk tombol Follow dan Masuk */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .action-buttons a, .action-buttons button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <img src="profil1.jpg" alt="Profile 1">
+            <span class="slash">/</span>
+            <img src="profil2.jpg" alt="Profile 2">
+            <span class="slash">/</span>
+            <img src="profil3.jpg" alt="Profile 3">
+        </div>
+        
+        <h1>Follow our TikTok account</h1>
+
+        <!-- Profil bulat yang menyala -->
+        <div class="glowing-profile">
+            <img src="profil.jpg" alt="Profile">
+        </div>
+        <div><a href="https://www.example.com">@_nebul.a</a></div>
+
+        <p>Follow Dulu Sebelum Masuk</p>
+        
+        <div class="action-buttons">
+            <a href="https://www.tiktok.com/@_nebul.a" target="_blank" class="btn" id="followBtn">Follow</a>
+            <button class="btn" id="accessBtn">Masuk</button>
+        </div>
+
+        <p class="error" id="errorMsg"></p>
+
+        <h3>Follow User Lainnya:</h3>
+        <center>
+        <div class="follower-container">
+            <ul class="follower-list" id="followerList"></ul>
+        </div>
+        </center>
+    </div>
+
+    <script>
+        let isFollowed = false;
+        let followers = [];
+
+        document.getElementById('followBtn').addEventListener('click', function() {
+            let followerName = prompt("Masuka Nama Akun Tiktok Anda Supaya Oranglain Bisa Mengaksesnya:");
+            if (followerName) {
+                isFollowed = true;
+                followers.push(followerName);
+                updateFollowerList();
+            }
+        });
+
+        document.getElementById('accessBtn').addEventListener('click', function() {
+            if (isFollowed) {
+                window.location.href = "https://lynk.id/kustore";
+            } else {
+                document.getElementById('errorMsg').textContent = "You must follow the TikTok account before accessing the content.";
+            }
+        });
+
+        function updateFollowerList() {
+            const followerList = document.getElementById('followerList');
+            followerList.innerHTML = '';
+            followers.forEach(follower => {
+                let listItem = document.createElement('li');
+                listItem.textContent = follower;
+
+                let followLink = document.createElement('a');
+                followLink.href = `https://www.tiktok.com/@${follower}`;
+                followLink.textContent = "Ikuti";
+                followLink.classList.add('follow-btn');
+                followLink.target = "_blank"; 
+
+                listItem.appendChild(followLink);
+                followerList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
